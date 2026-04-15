@@ -127,11 +127,35 @@ WECHAT_CSS = """
 .message.bot hr { border-color: #eee !important; margin: 10px 0 6px !important; }
 """
 
+def reindex_docs():
+    """Rebuild ChromaDB from scratch using everything currently in docs/."""
+    import subprocess, sys
+    try:
+        result = subprocess.run(
+            [sys.executable, str(Path(__file__).parent / "ingest.py")],
+            capture_output=True, text=True, timeout=600,
+        )
+        col = chromadb.PersistentClient(path=str(DB_DIR)).get_or_create_collection("knowledge_base")
+        out = result.stdout.strip().splitlines()
+        summary = "\n".join(out[-8:]) if out else "(no output)"
+        return f"✅ Reindex done. KB now has **{col.count()}** chunks.\n\n```\n{summary}\n```"
+    except Exception as e:
+        return f"❌ Reindex failed: {e}"
+
+
 with gr.Blocks(title="Nemotron 3 Super x Private Knowledge Base") as demo:
-    gr.Markdown("# 🧠 Nemotron 3 Super × Your Private Knowledge Base\nMulti-turn chat with memory · Auto-retrieves from everything in `docs/`")
+    gr.Markdown("# 🧠 Nemotron 3 Super × Your Private Knowledge Base\nMulti-turn chat with memory · Retrieves from your **indexed** documents")
     with gr.Row():
         use_rag = gr.Checkbox(value=True, label="Enable RAG retrieval")
         thinking = gr.Checkbox(value=False, label="Enable reasoning mode (slower)")
+        reindex_btn = gr.Button("🔄 Re-index docs/", variant="secondary", scale=0)
+    reindex_status = gr.Markdown(visible=False)
+    reindex_btn.click(
+        fn=lambda: gr.update(visible=True, value="⏳ Reindexing... this takes ~10-60 sec depending on file size."),
+        outputs=reindex_status,
+    ).then(
+        fn=reindex_docs, outputs=reindex_status,
+    )
     gr.ChatInterface(
         fn=respond,
         additional_inputs=[use_rag, thinking],
@@ -154,7 +178,7 @@ with gr.Blocks(title="Nemotron 3 Super x Private Knowledge Base") as demo:
             ["Based on my docs, what are the top 3 takeaways?", True, True],
         ],
     )
-    gr.Markdown("*Tip: drop new files into `docs/`, then run `python ingest.py` — or keep `python watch.py` running for auto-reindex.*")
+    gr.Markdown("*Tip: after dropping new files into `docs/`, click **🔄 Re-index docs/** above. Or keep `python watch.py` running in a second terminal for fully automatic re-indexing.*")
 
 if __name__ == "__main__":
     demo.launch(inbrowser=True, theme=gr.themes.Soft(), css=WECHAT_CSS)
