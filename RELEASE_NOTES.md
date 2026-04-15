@@ -63,7 +63,9 @@ Built on:
 - **Gradio** — UI framework
 - **Watchdog** — file system events
 
-Inspired by NVIDIA's "Agentic AI 101" / OpenClaw session at GTC 2026.
+Inspired by NVIDIA's "Agentic AI 101" / OpenClaw session at GTC 2026 — and by
+[Julia Suzuki](https://www.linkedin.com/in/juliafsuzuki/)'s sharp LinkedIn recap
+of that session, which was the direct spark for this project.
 
 ## 📜 License
 

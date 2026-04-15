@@ -105,5 +105,8 @@ MIT — see [LICENSE](LICENSE).
 
 ## 🙏 Acknowledgments
 
-Built after seeing NVIDIA's "Agentic AI 101" / OpenClaw session at **GTC 2026**.
-Shoutout to the NVIDIA team for shipping Nemotron 3 Super openly and for the clean API.
+- **[Julia Suzuki](https://www.linkedin.com/in/juliafsuzuki/)** — whose crisp LinkedIn recap
+  of NVIDIA's **"Agentic AI 101" / OpenClaw** session at **GTC 2026** was the direct spark
+  for this project. Thank you for sharing the takeaways so clearly.
+- **NVIDIA** — for shipping **Nemotron 3 Super** openly and for a clean, free-tier API at
+  [build.nvidia.com](https://build.nvidia.com).
