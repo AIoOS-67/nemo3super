@@ -86,7 +86,44 @@ def respond(message, history, use_rag, thinking):
     yield acc + sources_note
 
 
-with gr.Blocks(title="Nemotron 3 Super x Private Knowledge Base", theme=gr.themes.Soft()) as demo:
+WECHAT_CSS = """
+/* WeChat-style chat bubbles */
+.gradio-container { background: #ededed !important; }
+.message-row.user-row { justify-content: flex-end !important; }
+.message-row.bot-row  { justify-content: flex-start !important; }
+
+/* Bot bubble (left, white) */
+.message.bot, .bot .message-content, .message-wrap .bot .message {
+    background: #ffffff !important;
+    color: #000 !important;
+    border-radius: 4px 14px 14px 14px !important;
+    max-width: 70% !important;
+    padding: 10px 14px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+
+/* User bubble (right, WeChat green) */
+.message.user, .user .message-content, .message-wrap .user .message {
+    background: #95ec69 !important;
+    color: #000 !important;
+    border-radius: 14px 4px 14px 14px !important;
+    max-width: 70% !important;
+    padding: 10px 14px !important;
+    margin-left: auto !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+
+/* Avatar sizing */
+.avatar-container img { width: 36px !important; height: 36px !important; border-radius: 4px !important; }
+
+/* Tighten spacing */
+.message-wrap { gap: 12px !important; }
+
+/* Source-citation footer inside bot bubble — slightly dimmed */
+.message.bot hr { border-color: #eee !important; margin: 10px 0 6px !important; }
+"""
+
+with gr.Blocks(title="Nemotron 3 Super x Private Knowledge Base") as demo:
     gr.Markdown("# 🧠 Nemotron 3 Super × Your Private Knowledge Base\nMulti-turn chat with memory · Auto-retrieves from everything in `docs/`")
     with gr.Row():
         use_rag = gr.Checkbox(value=True, label="Enable RAG retrieval")
@@ -94,8 +131,19 @@ with gr.Blocks(title="Nemotron 3 Super x Private Knowledge Base", theme=gr.theme
     gr.ChatInterface(
         fn=respond,
         additional_inputs=[use_rag, thinking],
-        chatbot=gr.Chatbot(label="Conversation", height=500),
-        textbox=gr.Textbox(placeholder="Ask anything about your documents...", label="Your question", submit_btn="Send", stop_btn="Stop"),
+        chatbot=gr.Chatbot(
+            label="Conversation",
+            height=560,
+            show_label=False,
+            avatar_images=(
+                "https://api.dicebear.com/7.x/identicon/svg?seed=you",
+                "https://api.dicebear.com/7.x/bottts/svg?seed=nemotron",
+            ),
+        ),
+        textbox=gr.Textbox(placeholder="Ask anything about your documents...",
+                           label="",
+                           submit_btn="Send",
+                           stop_btn="Stop"),
         examples=[
             ["What do you think of Tesla's IPO?", True, False],
             ["Summarize the key risks the bears pointed out.", True, False],
@@ -105,4 +153,4 @@ with gr.Blocks(title="Nemotron 3 Super x Private Knowledge Base", theme=gr.theme
     gr.Markdown("*Tip: drop new files into `docs/`, then run `python ingest.py` — or keep `python watch.py` running for auto-reindex.*")
 
 if __name__ == "__main__":
-    demo.launch(inbrowser=True)
+    demo.launch(inbrowser=True, theme=gr.themes.Soft(), css=WECHAT_CSS)
