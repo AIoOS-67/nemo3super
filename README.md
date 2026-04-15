@@ -3,7 +3,11 @@
 > A zero-config, privacy-first RAG chatbot powered by **NVIDIA Nemotron 3 Super 120B**.
 > Drop your docs into a folder. Chat with them in your browser. Your data stays local.
 
-![UI Screenshot](docs/screenshot.png)
+### 📥 [**Download latest release → Nemotron-RAG.zip**](https://github.com/AIoOS-67/nemo3super/releases/latest)
+
+[![Latest Release](https://img.shields.io/github/v/release/AIoOS-67/nemo3super?label=latest&color=brightgreen)](https://github.com/AIoOS-67/nemo3super/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Downloads](https://img.shields.io/github/downloads/AIoOS-67/nemo3super/total)](https://github.com/AIoOS-67/nemo3super/releases)
 
 ## 📂 Supported File Formats
 
@@ -28,11 +32,13 @@ No accounts. No cloud uploads. No docker. Just a Python venv, a Gradio UI, and y
 
 ## ⚡ Quick Start (End Users)
 
-Grab the latest release:
+**Step-by-step:**
 
-```
-Releases → Nemotron-RAG.zip → extract → double-click Start.bat (or Start.command)
-```
+1. Go to the **[Releases page](https://github.com/AIoOS-67/nemo3super/releases/latest)**
+2. Under **"Assets"**, click **`Nemotron-RAG.zip`** to download (~20 KB)
+3. Right-click the zip → **Extract All...** (anywhere you like — Desktop is fine)
+4. Open the extracted `Nemotron-RAG` folder
+5. **Windows:** double-click `Start.bat` · **macOS/Linux:** `./Start.command`
 
 > **Windows "Unknown Publisher" warning is expected.** The launcher isn't
 > code-signed. Click **Run** to proceed, or right-click `Start.bat` → Properties →
