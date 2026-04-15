@@ -42,9 +42,9 @@ def main():
         if p.suffix.lower() in exts
         and not any(part in skip_dirs for part in p.parts)
     ]
-    print(f"发现 {len(files)} 个文件\n")
+    print(f"Found {len(files)} file(s)\n")
     if not files:
-        print(f"⚠️  没有文档。把 .txt/.md/.pdf 丢进 {DOCS_DIR} 再运行。")
+        print(f"[!] No documents. Drop files into {DOCS_DIR} and re-run.")
         return
 
     client = chromadb.PersistentClient(path=str(DB_DIR))
@@ -64,7 +64,7 @@ def main():
             col.upsert(ids=ids, documents=batch, embeddings=vecs,
                        metadatas=[{"source": str(f.name)}] * len(batch))
         print(f"   ✅ {len(chunks)} chunks")
-    print(f"\n总计 collection 条数: {col.count()}")
+    print(f"\nTotal entries in collection: {col.count()}")
 
 
 if __name__ == "__main__":

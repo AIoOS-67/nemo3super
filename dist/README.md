@@ -8,7 +8,7 @@ Drop your docs into `docs/`, chat with them in the browser — your data never l
 ### Windows
 1. **Install Python 3.10+** from https://python.org (check "Add to PATH" during install)
 2. **Get a free NVIDIA API key** at https://build.nvidia.com (Sign up → model page → "Get API Key")
-3. **Double-click `启动.bat`**
+3. **Double-click `Start.bat`**
 4. On first run it will:
    - Create a virtual environment
    - Install dependencies (3–5 min)
@@ -42,7 +42,7 @@ Then either:
 ## 🔧 Files
 
 ```
-├── 启动.bat / Start.command    ← double-click to launch
+├── Start.bat / Start.command   ← double-click to launch
 ├── requirements.txt
 ├── .env                        ← your API key (auto-created)
 ├── docs/                       ← drop your files here

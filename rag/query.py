@@ -36,16 +36,17 @@ def ask(question: str):
     if hits:
         context = "\n\n".join(f"[{h['source']}]\n{h['text']}" for h in hits)
         system = (
-            "你是一个严谨的助理。只根据下面【知识库】内容回答问题，"
-            "若知识库不包含答案，明确说明 '知识库中没有相关信息'，不要编造。\n\n"
-            f"【知识库】\n{context}"
+            "You are a careful assistant. Answer based on the [Knowledge Base] below. "
+            "If the snippets don't contain the answer, say 'No relevant information in the knowledge base' "
+            "and do not fabricate. Reply in the user's language.\n\n"
+            f"[Knowledge Base]\n{context}"
         )
-        print(f"\n🔍 检索到 {len(hits)} 个相关片段，来源: {set(h['source'] for h in hits)}")
+        print(f"\n[Retrieved] {len(hits)} snippet(s) from: {sorted({h['source'] for h in hits})}")
     else:
-        system = "你是一个有用的助理。(注：当前知识库为空，仅凭常识作答)"
-        print("\n⚠️  知识库为空，走通用回答")
+        system = "You are a helpful assistant. (Note: the knowledge base is empty; answer from general knowledge.) Reply in the user's language."
+        print("\n[!] Knowledge base is empty — answering from general knowledge.")
 
-    print(f"\n【问题】{question}\n【Nemotron 回答】")
+    print(f"\n[Question] {question}\n[Answer]")
     stream = client.chat.completions.create(
         model="nvidia/nemotron-3-super-120b-a12b",
         messages=[

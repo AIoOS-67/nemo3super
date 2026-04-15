@@ -10,13 +10,13 @@ client = OpenAI(
     api_key=os.environ["NVIDIA_API_KEY"],
 )
 
-history = [{"role": "system", "content": "你是一个简洁、直接的助理。"}]
+history = [{"role": "system", "content": "You are a concise, direct assistant. Reply in the user's language."}]
 
-print("💬 Nemotron 3 Super 连续对话（输入 /reset 清空 /exit 退出）\n")
+print("Nemotron 3 Super chat (commands: /reset to clear history, /exit to quit)\n")
 
 while True:
     try:
-        user = input("你 > ").strip()
+        user = input("you > ").strip()
     except (EOFError, KeyboardInterrupt):
         break
     if not user:
@@ -25,11 +25,11 @@ while True:
         break
     if user == "/reset":
         history = history[:1]
-        print("(历史已清空)\n")
+        print("(history cleared)\n")
         continue
 
     history.append({"role": "user", "content": user})
-    print("🤖 ", end="", flush=True)
+    print("bot > ", end="", flush=True)
     stream = client.chat.completions.create(
         model="nvidia/nemotron-3-super-120b-a12b",
         messages=history,

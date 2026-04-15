@@ -1,5 +1,6 @@
 @echo off
 chcp 65001 >nul
+setlocal enabledelayedexpansion
 title Nemotron 3 Super x Private KB
 cd /d "%~dp0"
 
@@ -20,7 +21,7 @@ if errorlevel 1 (
 REM --- first-run: create venv + install deps ---
 if not exist ".venv\Scripts\python.exe" (
     echo [First launch] Creating virtual environment and installing dependencies...
-    echo    (takes 3-5 min first time, only runs once^)
+    echo    ^(takes 3-5 min first time, only runs once^)
     python -m venv .venv
     call .venv\Scripts\activate.bat
     python -m pip install --upgrade pip -q
@@ -31,12 +32,17 @@ if not exist ".venv\Scripts\python.exe" (
     call .venv\Scripts\activate.bat
 )
 
-REM --- check API key ---
+REM --- check API key (delayed expansion required so !NVKEY! reads the just-typed value) ---
 if not exist ".env" (
-    echo [Config] No .env found. Please enter your NVIDIA API Key:
+    echo [Config] No .env found. Please paste your NVIDIA API Key:
     echo    ^(get one free at https://build.nvidia.com^)
-    set /p NVKEY="NVIDIA_API_KEY="
-    echo NVIDIA_API_KEY=%NVKEY%> .env
+    set /p "NVKEY=NVIDIA_API_KEY="
+    if "!NVKEY!"=="" (
+        echo [Error] Empty API key. Aborting.
+        pause
+        exit /b 1
+    )
+    > .env echo NVIDIA_API_KEY=!NVKEY!
     echo [Saved] Written to .env
     echo.
 )

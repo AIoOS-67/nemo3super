@@ -28,7 +28,7 @@ def reindex_file(path: Path):
     try:
         text = read_file(path)
     except Exception as e:
-        print(f"   ❌ 读取失败: {e}")
+        print(f"   [error] read failed: {e}")
         return
     chunks = chunk(text)
     if not chunks:
@@ -76,8 +76,8 @@ def main():
     obs = Observer()
     obs.schedule(Handler(), str(DOCS_DIR), recursive=True)
     obs.start()
-    print(f"👀 监听 {DOCS_DIR}")
-    print("   (Ctrl+C 停止。修改/新增文件会自动重新索引)")
+    print(f"Watching {DOCS_DIR}")
+    print("   (Ctrl+C to stop. New/modified files are auto re-indexed.)")
     try:
         while True:
             time.sleep(1)

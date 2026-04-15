@@ -9,7 +9,7 @@ client = OpenAI(
     api_key=os.environ["NVIDIA_API_KEY"],
 )
 
-prompt = "用三句话解释 USDT 稳定币结算对比 Stripe 信用卡结算的核心优势。"
+prompt = "In three sentences, explain the core advantages of stablecoin (USDT) settlement vs. credit card settlement."
 
 completion = client.chat.completions.create(
     model="nvidia/nemotron-3-super-120b-a12b",
@@ -24,8 +24,8 @@ completion = client.chat.completions.create(
     stream=True,
 )
 
-print(f"\n【问题】{prompt}\n")
-print("【Nemotron 回答】")
+print(f"\n[Question] {prompt}\n")
+print("[Nemotron answer]")
 in_reasoning = False
 for chunk in completion:
     if not chunk.choices:
@@ -34,12 +34,12 @@ for chunk in completion:
     reasoning = getattr(delta, "reasoning_content", None)
     if reasoning:
         if not in_reasoning:
-            print("\n--- 思考过程 ---")
+            print("\n--- reasoning ---")
             in_reasoning = True
         print(reasoning, end="", flush=True)
     if delta.content:
         if in_reasoning:
-            print("\n\n--- 最终回答 ---")
+            print("\n\n--- final answer ---")
             in_reasoning = False
         print(delta.content, end="", flush=True)
 print("\n")
