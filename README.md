@@ -22,6 +22,11 @@ Grab the latest release:
 Releases → Nemotron-RAG.zip → extract → double-click Start.bat (or Start.command)
 ```
 
+> **Windows "Unknown Publisher" warning is expected.** The launcher isn't
+> code-signed. Click **Run** to proceed, or right-click `Start.bat` → Properties →
+> **Unblock** to silence it permanently. The script is plain text — inspect it in
+> Notepad first if you want to verify it's safe.
+
 On first launch the script:
 1. Creates a virtual environment
 2. Installs dependencies (~3–5 min)
