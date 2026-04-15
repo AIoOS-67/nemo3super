@@ -11,7 +11,7 @@ load_dotenv()
 
 ROOT = Path(__file__).parent.parent
 DB_DIR = ROOT / "chroma_db"
-TOP_K = 5
+TOP_K = 8
 
 client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",
@@ -51,12 +51,13 @@ def respond(message, history, use_rag, thinking):
     elif hits:
         context = "\n\n".join(f"[{h['source']}]\n{h['text']}" for h in hits)
         system = (
-            "You are the user's personal assistant, familiar with their project. "
-            "Answer primarily based on the [Knowledge Base] below. "
-            "If the retrieved snippets don't directly contain the answer but are related, "
-            "you may reason from them and note the inference. "
-            "Only say 'No relevant information in the knowledge base' when the snippets are truly unrelated. "
-            "Reply in the same language the user used.\n\n"
+            "You are the user's sharp, helpful personal assistant. Your job is to extract and "
+            "synthesize answers from the [Knowledge Base] below — do not be shy about reasoning "
+            "across multiple snippets, connecting related facts, comparing sources, or making "
+            "supported inferences. Quote exact numbers/names when they appear in the snippets. "
+            "If the knowledge base truly has nothing relevant, say so briefly and then offer a "
+            "concise general-knowledge answer clearly labeled '(general knowledge, not from KB)'. "
+            "Always cite the source file(s) you pulled from. Reply in the same language the user used.\n\n"
             f"[Knowledge Base]\n{context}"
         )
         sources_note = f"\n\n---\n📚 {len(hits)} snippets cited / {total} total in KB / sources: {', '.join(sorted({h['source'] for h in hits}))}"

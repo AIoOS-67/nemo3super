@@ -7,13 +7,14 @@ from pypdf import PdfReader
 from docx import Document
 from openpyxl import load_workbook
 from pptx import Presentation
+from bs4 import BeautifulSoup
 from embedder import embed
 
 ROOT = Path(__file__).parent.parent
 DOCS_DIR = ROOT / "docs"
 DB_DIR = ROOT / "chroma_db"
-CHUNK_SIZE = 400
-CHUNK_OVERLAP = 60
+CHUNK_SIZE = 800
+CHUNK_OVERLAP = 120
 
 
 def read_file(path: Path) -> str:
@@ -52,7 +53,13 @@ def read_file(path: Path) -> str:
                         if txt:
                             lines.append(txt)
         return "\n".join(lines)
-    return path.read_text(encoding="utf-8", errors="ignore")
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    if suf in {".html", ".htm"}:
+        soup = BeautifulSoup(text, "lxml")
+        for tag in soup(["script", "style", "noscript"]):
+            tag.decompose()
+        return soup.get_text(separator="\n", strip=True)
+    return text
 
 
 def chunk(text: str) -> list[str]:
@@ -66,7 +73,7 @@ def chunk(text: str) -> list[str]:
 
 def main():
     DOCS_DIR.mkdir(exist_ok=True)
-    exts = {".txt", ".md", ".pdf", ".py", ".json", ".html",
+    exts = {".txt", ".md", ".pdf", ".py", ".json", ".html", ".htm",
             ".docx", ".xlsx", ".csv", ".pptx"}
     skip_dirs = {".venv", "venv", "node_modules", "__pycache__", ".git",
                  "site-packages", "dist-info", ".pytest_cache"}

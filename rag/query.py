@@ -11,7 +11,7 @@ load_dotenv()
 
 ROOT = Path(__file__).parent.parent
 DB_DIR = ROOT / "chroma_db"
-TOP_K = 5
+TOP_K = 8
 
 client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",
@@ -36,9 +36,12 @@ def ask(question: str):
     if hits:
         context = "\n\n".join(f"[{h['source']}]\n{h['text']}" for h in hits)
         system = (
-            "You are a careful assistant. Answer based on the [Knowledge Base] below. "
-            "If the snippets don't contain the answer, say 'No relevant information in the knowledge base' "
-            "and do not fabricate. Reply in the user's language.\n\n"
+            "You are a sharp, helpful assistant. Extract and synthesize answers from the "
+            "[Knowledge Base] — reason across multiple snippets, compare sources, and make "
+            "supported inferences. Quote exact numbers/names when present. If the KB truly "
+            "has nothing relevant, say so briefly and offer a concise general-knowledge "
+            "answer labeled '(general knowledge, not from KB)'. Cite source file(s). "
+            "Reply in the user's language.\n\n"
             f"[Knowledge Base]\n{context}"
         )
         print(f"\n[Retrieved] {len(hits)} snippet(s) from: {sorted({h['source'] for h in hits})}")
