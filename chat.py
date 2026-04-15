@@ -33,8 +33,11 @@ while True:
     stream = client.chat.completions.create(
         model="nvidia/nemotron-3-super-120b-a12b",
         messages=history,
-        temperature=0.4,
-        max_tokens=4096,
+        temperature=0.6,
+        top_p=0.95,
+        max_tokens=2048,
+        frequency_penalty=0.3,
+        presence_penalty=0.1,
         extra_body={"chat_template_kwargs": {"enable_thinking": False}},
         stream=True,
     )

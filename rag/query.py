@@ -53,8 +53,11 @@ def ask(question: str):
             {"role": "system", "content": system},
             {"role": "user", "content": question},
         ],
-        temperature=0.3,
-        max_tokens=4096,
+        temperature=0.6,
+        top_p=0.95,
+        max_tokens=2048,
+        frequency_penalty=0.3,
+        presence_penalty=0.1,
         extra_body={"chat_template_kwargs": {"enable_thinking": False}},
         stream=True,
     )
