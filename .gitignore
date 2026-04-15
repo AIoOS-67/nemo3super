@@ -23,6 +23,10 @@ docs/*
 *.swp
 .claude/
 
+# Personal project journal (private strategy notes — not for public repo)
+完整记忆.md
+完整记忆-*.md
+
 # OS
 .DS_Store
 Thumbs.db
