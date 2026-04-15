@@ -26,8 +26,12 @@ On first launch the script:
 1. Creates a virtual environment
 2. Installs dependencies (~3–5 min)
 3. Prompts for your NVIDIA API key (get one free at [build.nvidia.com](https://build.nvidia.com))
-4. Ingests anything in `docs/`
+4. Ingests whatever is in `docs/` into ChromaDB (**one-time**, only if `chroma_db/` doesn't exist)
 5. Opens the chat UI in your browser
+
+**Adding documents later?** Start.bat does NOT auto-reindex on subsequent runs.
+Either run `python rag/ingest.py` manually, or keep `python rag/watch.py` running in a
+second terminal for live re-indexing.
 
 See the [user guide](dist/README.md) for details.
 
