@@ -9,11 +9,16 @@ Drop your docs into `docs/`, chat with them in the browser — your data never l
 1. **Install Python 3.10+** from https://python.org (check "Add to PATH" during install)
 2. **Get a free NVIDIA API key** at https://build.nvidia.com (Sign up → model page → "Get API Key")
 3. **Double-click `Start.bat`**
-4. On first run it will:
+4. On **first** run it will:
    - Create a virtual environment
    - Install dependencies (3–5 min)
    - Ask for your API key
+   - Ingest whatever is in `docs/` into ChromaDB (one-time)
    - Open the chat UI in your browser
+
+> **Re-indexing later** — Start.bat does NOT auto-detect new files on subsequent
+> launches. After adding/editing docs, either run `python rag/ingest.py` once, or
+> keep `python rag/watch.py` running for live re-indexing.
 
 ### macOS / Linux
 ```bash
