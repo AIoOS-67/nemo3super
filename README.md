@@ -3,6 +3,8 @@
 > A zero-config, privacy-first RAG chatbot powered by **NVIDIA Nemotron 3 Super 120B**.
 > Drop your docs into a folder. Chat with them in your browser. Your data stays local.
 
+![UI Screenshot](docs/screenshot.png)
+
 ### 📥 [**Download latest release → Nemotron-RAG.zip**](https://github.com/AIoOS-67/nemo3super/releases/latest)
 
 [![Latest Release](https://img.shields.io/github/v/release/AIoOS-67/nemo3super?label=latest&color=brightgreen)](https://github.com/AIoOS-67/nemo3super/releases/latest)
