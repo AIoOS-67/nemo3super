@@ -1,0 +1,37 @@
+# Environments
+.venv/
+venv/
+env/
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Runtime data
+chroma_db/
+docs/*
+!docs/.gitkeep
+!docs/screenshot.png
+!docs/sample_tesla_ipo.md
+
+# IDE / tooling
+.vscode/
+.idea/
+*.swp
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts (keep the zip out of git — GitHub Release only)
+dist/Nemotron-RAG/
+dist/Nemotron-RAG.zip
+dist/_stage_*/
+
+# Screenshots except the hero
+docs/screenshot.png
+!docs/screenshot.png
