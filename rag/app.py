@@ -120,12 +120,21 @@ def respond(message, history, use_rag, thinking):
         stream=True,
     )
 
+    def strip_reasoning(text: str) -> str:
+        """Nemotron occasionally leaks <think>...</think> into content even when
+        enable_thinking=False. Also strips obvious pre-answer monologue."""
+        if "</think>" in text:
+            text = text.split("</think>", 1)[1]
+        if "<think>" in text:
+            text = text.split("<think>", 1)[0] + text.split("</think>", 1)[-1] if "</think>" in text else text.split("<think>", 1)[0]
+        return text.lstrip()
+
     acc = ""
     for chunk in stream:
         if chunk.choices and chunk.choices[0].delta.content:
             acc += chunk.choices[0].delta.content
-            yield acc
-    yield acc + sources_note
+            yield strip_reasoning(acc)
+    yield strip_reasoning(acc) + sources_note
 
 
 WECHAT_CSS = """

@@ -64,9 +64,25 @@ def ask(question: str):
         extra_body={"chat_template_kwargs": {"enable_thinking": False}},
         stream=True,
     )
+    buf = ""
+    past_think = False
     for chunk in stream:
         if chunk.choices and chunk.choices[0].delta.content:
-            print(chunk.choices[0].delta.content, end="", flush=True)
+            piece = chunk.choices[0].delta.content
+            if past_think:
+                print(piece, end="", flush=True)
+                continue
+            buf += piece
+            if "</think>" in buf:
+                print(buf.split("</think>", 1)[1], end="", flush=True)
+                past_think = True
+            elif "<think>" not in buf and len(buf) > 20:
+                # no thinking tags detected, safe to flush
+                print(buf, end="", flush=True)
+                buf = ""
+                past_think = True
+    if not past_think and buf:
+        print(buf, end="", flush=True)
     print("\n")
 
 
