@@ -34,9 +34,14 @@ chmod +x Start.command
 
 ## 📁 Adding Your Documents
 
-Drop files into the `docs/` folder. Supported:
-- `.txt` `.md` `.pdf` `.docx`
-- `.py` `.json` `.html` (code / config)
+Drop files into the `docs/` folder. Supported formats:
+
+| Category | Extensions |
+|---|---|
+| Documents | `.pdf` `.docx` `.md` `.txt` |
+| Spreadsheets | `.xlsx` `.csv` |
+| Slides | `.pptx` |
+| Code / config | `.py` `.json` `.html` |
 
 Then either:
 - **Manual**: run `python rag/ingest.py` once

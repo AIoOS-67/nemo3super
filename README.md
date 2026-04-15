@@ -5,6 +5,18 @@
 
 ![UI Screenshot](docs/screenshot.png)
 
+## 📂 Supported File Formats
+
+| Category | Extensions | Notes |
+|---|---|---|
+| Documents | `.pdf` `.docx` `.md` `.txt` | PDFs via `pypdf`, Word via `python-docx` |
+| Spreadsheets | `.xlsx` `.csv` | All sheets + rows flattened to tab-separated text |
+| Slides | `.pptx` | Text from every slide + shape |
+| Code / config | `.py` `.json` `.html` | Treated as plain text |
+
+Anything else (images, audio, `.doc`/`.ppt` legacy, scanned PDFs) is **not yet supported** —
+see the [roadmap](RELEASE_NOTES.md#-roadmap).
+
 ## 🎯 What is this?
 
 A **downloadable desktop-style** chatbot that lets you query your own documents

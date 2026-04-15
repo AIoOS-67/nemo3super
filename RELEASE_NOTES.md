@@ -9,7 +9,7 @@ Download, double-click, drop in your files, and chat with your own docs — in y
 
 - 🧠 **Nemotron 3 Super 120B** via NVIDIA's free API (`build.nvidia.com`)
 - 🔍 **RAG with source citations** — every answer shows which file it came from
-- 🧩 **Multi-format ingestion** — `.pdf`, `.docx`, `.md`, `.txt`, `.py`, `.json`, `.html`
+- 🧩 **Multi-format ingestion** — `.pdf`, `.docx`, `.xlsx`, `.csv`, `.pptx`, `.md`, `.txt`, `.py`, `.json`, `.html`
 - 🌐 **Bilingual out of the box** — model replies in the language you ask in
 - 🎛️ **Toggles** — RAG on/off, reasoning (thinking) mode on/off
 - 👀 **Live re-indexing** — `watch.py` auto-re-embeds when files change
@@ -49,7 +49,7 @@ Open the browser tab and ask anything. The bot cites its sources.
 
 ## 🛣️ Roadmap
 
-- [ ] `.xlsx` / `.csv` ingestion
+- [x] ~~`.xlsx` / `.csv` / `.pptx` ingestion~~ (shipped in v0.1.3)
 - [ ] Drag-and-drop upload in the web UI
 - [ ] Optional local fallback (Ollama) when NVIDIA API is unreachable
 - [ ] Packaged `.exe` installer (PyInstaller)

@@ -10,7 +10,8 @@ from ingest import read_file, chunk
 ROOT = Path(__file__).parent.parent
 DOCS_DIR = ROOT / "docs"
 DB_DIR = ROOT / "chroma_db"
-EXTS = {".txt", ".md", ".pdf", ".py", ".json", ".html", ".docx"}
+EXTS = {".txt", ".md", ".pdf", ".py", ".json", ".html",
+        ".docx", ".xlsx", ".csv", ".pptx"}
 SKIP = {".venv", "venv", "node_modules", "__pycache__", ".git",
         "site-packages", "dist-info", ".pytest_cache"}
 
