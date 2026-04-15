@@ -1,17 +1,55 @@
-"""Gradio chat UI with RAG + multi-turn memory. Run: python app.py"""
+"""Gradio chat UI with RAG + multi-turn memory + live file watcher. Run: python app.py"""
 import os
+import threading
+from datetime import datetime
 from pathlib import Path
 import chromadb
 import gradio as gr
 from dotenv import load_dotenv
 from openai import OpenAI
+from watchdog.observers import Observer
 from embedder import embed
+from watch import Handler as WatchHandler, should_skip, reindex_file
 
 load_dotenv()
 
 ROOT = Path(__file__).parent.parent
+DOCS_DIR = ROOT / "docs"
 DB_DIR = ROOT / "chroma_db"
 TOP_K = 8
+
+# --- Live watcher state (updated by UIHandler in background thread) ---
+_watch_state = {"file": None, "time": None, "started": False}
+
+
+class UIHandler(WatchHandler):
+    """Extends watch.Handler to record the last re-indexed file for UI display."""
+    def _trigger(self, path_str):
+        super()._trigger(path_str)
+        p = Path(path_str)
+        if not should_skip(p):
+            _watch_state["file"] = p.name
+            _watch_state["time"] = datetime.now()
+
+
+def start_background_watcher():
+    if _watch_state["started"]:
+        return
+    _watch_state["started"] = True
+    DOCS_DIR.mkdir(exist_ok=True)
+    obs = Observer()
+    obs.schedule(UIHandler(), str(DOCS_DIR), recursive=True)
+    obs.daemon = True
+    obs.start()
+
+
+def index_status():
+    col = chromadb.PersistentClient(path=str(DB_DIR)).get_or_create_collection("knowledge_base")
+    count = col.count()
+    if _watch_state["file"] and _watch_state["time"]:
+        t = _watch_state["time"].strftime("%H:%M:%S")
+        return f"🟢 **Live indexing** · Last change: `{_watch_state['file']}` at {t} · KB has **{count}** chunks"
+    return f"🟢 **Watching** `docs/` — drop any supported file, it auto-indexes in ~2s · KB has **{count}** chunks"
 
 client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",
@@ -127,35 +165,14 @@ WECHAT_CSS = """
 .message.bot hr { border-color: #eee !important; margin: 10px 0 6px !important; }
 """
 
-def reindex_docs():
-    """Rebuild ChromaDB from scratch using everything currently in docs/."""
-    import subprocess, sys
-    try:
-        result = subprocess.run(
-            [sys.executable, str(Path(__file__).parent / "ingest.py")],
-            capture_output=True, text=True, timeout=600,
-        )
-        col = chromadb.PersistentClient(path=str(DB_DIR)).get_or_create_collection("knowledge_base")
-        out = result.stdout.strip().splitlines()
-        summary = "\n".join(out[-8:]) if out else "(no output)"
-        return f"✅ Reindex done. KB now has **{col.count()}** chunks.\n\n```\n{summary}\n```"
-    except Exception as e:
-        return f"❌ Reindex failed: {e}"
-
-
 with gr.Blocks(title="Nemotron 3 Super x Private Knowledge Base") as demo:
-    gr.Markdown("# 🧠 Nemotron 3 Super × Your Private Knowledge Base\nMulti-turn chat with memory · Retrieves from your **indexed** documents")
+    gr.Markdown("# 🧠 Nemotron 3 Super × Your Private Knowledge Base\nMulti-turn chat with memory · **Auto-retrieves** from everything in `docs/` — drop a file, ask about it 2 seconds later.")
+    status_md = gr.Markdown(index_status())
     with gr.Row():
         use_rag = gr.Checkbox(value=True, label="Enable RAG retrieval")
         thinking = gr.Checkbox(value=False, label="Enable reasoning mode (slower)")
-        reindex_btn = gr.Button("🔄 Re-index docs/", variant="secondary", scale=0)
-    reindex_status = gr.Markdown(visible=False)
-    reindex_btn.click(
-        fn=lambda: gr.update(visible=True, value="⏳ Reindexing... this takes ~10-60 sec depending on file size."),
-        outputs=reindex_status,
-    ).then(
-        fn=reindex_docs, outputs=reindex_status,
-    )
+    status_timer = gr.Timer(3.0)
+    status_timer.tick(fn=index_status, outputs=status_md)
     gr.ChatInterface(
         fn=respond,
         additional_inputs=[use_rag, thinking],
@@ -178,7 +195,8 @@ with gr.Blocks(title="Nemotron 3 Super x Private Knowledge Base") as demo:
             ["Based on my docs, what are the top 3 takeaways?", True, True],
         ],
     )
-    gr.Markdown("*Tip: after dropping new files into `docs/`, click **🔄 Re-index docs/** above. Or keep `python watch.py` running in a second terminal for fully automatic re-indexing.*")
+    gr.Markdown("*Supported: `.pdf` `.docx` `.xlsx` `.csv` `.pptx` `.md` `.txt` `.html` `.py` `.json` — the watcher runs inside this process, no second terminal needed.*")
 
 if __name__ == "__main__":
+    start_background_watcher()
     demo.launch(inbrowser=True, theme=gr.themes.Soft(), css=WECHAT_CSS)
